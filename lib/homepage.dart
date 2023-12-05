@@ -58,6 +58,10 @@ class _HomePageState extends State<HomePage> {
     return formattedDate;
   }
 
+  int convertToFahrenheit(double fahrenheit) {
+    return ((fahrenheit - 32) * 5 / 9).round();
+  }
+
   @override
   Widget build(BuildContext context) {
     final weatherinfo = Provider.of<WeatherDetails>(context, listen: true);
@@ -96,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                     height: 40,
                   ),
                   Text(
-                    "${weatherinfo.weatherdata!.main.temp.toString()} \u2103",
+                    "${convertToFahrenheit(weatherinfo.weatherdata!.main.temp)}\u2103",
                     style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 50,
@@ -200,40 +204,34 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 20),
                   Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 90),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text(
                               "Today",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(),
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const Days(),
-                                  ));
-                                },
-                                child: const Padding(
-                                  padding: EdgeInsets.only(left: 50),
-                                  child: Text(
-                                    "7-Day Forecasts",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                  ),
-                                ),
-                              ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const Days(),
+                              ));
+                            },
+                            child: const Text(
+                              "5-Day Forecasts",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -297,10 +295,7 @@ class _HomePageState extends State<HomePage> {
                                                     width: 80,
                                                   ),
                                                   Text(
-                                                    currentDayForecast[index]
-                                                        .main
-                                                        .temp
-                                                        .toString(),
+                                                    "${convertToFahrenheit(currentDayForecast[index].main.temp)} \u00B0C",
                                                     style: const TextStyle(
                                                         color: Colors.white),
                                                   ),

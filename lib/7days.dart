@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:qweather_icons/qweather_icons.dart';
+import 'package:weather_app/forecastapi.dart';
+import 'package:weather_app/model/forecast_weather_model.dart';
 import 'package:weather_app/weatherapi.dart';
 
 class Days extends StatefulWidget {
@@ -28,14 +30,35 @@ class _DaysState extends State<Days> {
     return localTime;
   }
 
+  DateTime? unpackDate(dynamic k) {
+    int millis = k * 1000;
+    return DateTime.fromMillisecondsSinceEpoch(millis);
+  }
+
+  String formatDate(dynamic date) {
+    String formattedDate = DateFormat('E').format(date);
+    return formattedDate;
+  }
+
   String formatDate2(dynamic date) {
     String formattedDate = DateFormat('hh:mm').format(date);
     return formattedDate;
   }
 
+  String formatDay(dynamic date) {
+    String formattedDay = DateFormat('d').format(date);
+    return formattedDay;
+  }
+
+  int convertToFahrenheit(double fahrenheit) {
+    return ((fahrenheit - 32) * 5 / 9).round();
+  }
+
   @override
   Widget build(BuildContext context) {
     final weatherinfo = Provider.of<WeatherDetails>(context);
+    final forecastinfo = Provider.of<ForecastDetails>(context, listen: true);
+    // final daynames = getNextFiveDays();
 
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 100, 78, 159),
@@ -44,7 +67,7 @@ class _DaysState extends State<Days> {
         ),
         body: Column(children: [
           const Text(
-            "7-Days",
+            "5-Days",
             style: TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
           ),
@@ -64,9 +87,9 @@ class _DaysState extends State<Days> {
                   padding: const EdgeInsets.only(left: 50, top: 30),
                   child: Column(
                     children: [
-                      const Row(
+                      Row(
                         children: [
-                          Text(
+                          const Text(
                             "Tomorrow\nMostly Cloudy",
                             style: TextStyle(
                               color: Colors.white,
@@ -78,10 +101,10 @@ class _DaysState extends State<Days> {
                               Padding(
                                 padding: EdgeInsets.only(left: 60.0),
                                 child: Text(
-                                  "19\u00B0",
-                                  style: TextStyle(
+                                  "${convertToFahrenheit(forecastinfo.forecastdata!.list[0].main.temp)}\u2103",
+                                  style: const TextStyle(
                                       color: Colors.white,
-                                      fontSize: 80,
+                                      fontSize: 70,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -158,291 +181,100 @@ class _DaysState extends State<Days> {
                     ],
                   ),
                 ),
-
-//
-// );
               )),
           const SizedBox(
-            height: 5,
+            height: 20,
           ),
-          Column(
-            children: [
-              Container(
-                  height: 20,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 100, 78, 159),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    // child: Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Text(
-                    //       "Monday",
-                    //       style: TextStyle(
-                    //           color: Colors.white,
-                    //           fontSize: 20,
-                    //           fontWeight: FontWeight.w200),
-                    //     ),
-                    //     Icon(
-                    //       Icons.ac_unit,
-                    //       color: Colors.white,
-                    //     ),
-                    //     Text("windy",
-                    //         style: TextStyle(
-                    //             color: Colors.white24,
-                    //             fontSize: 20,
-                    //             fontWeight: FontWeight.w200)),
-                    //     Text("high",
-                    //         style: TextStyle(
-                    //             color: Colors.white,
-                    //             fontSize: 20,
-                    //             fontWeight: FontWeight.w600)),
-                    //     Text("low",
-                    //         style: TextStyle(
-                    //             color: Colors.white,
-                    //             fontSize: 20,
-                    //             fontWeight: FontWeight.w600))
-                    //   ],
-                    // ),
-                  )),
-              Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 100, 78, 159),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Tuesday",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w200),
-                        ),
-                        Icon(
-                          Icons.ac_unit,
-                        ),
-                        Text("windy",
-                            style: TextStyle(
-                                color: Colors.white24,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w200)),
-                        Text("high",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600)),
-                        Text("low",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600))
-                      ],
-                    ),
-                  )),
-              Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 100, 78, 159),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Wednesday",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w200),
-                        ),
-                        Icon(
-                          Icons.ac_unit,
-                        ),
-                        Text("windy",
-                            style: TextStyle(
-                                color: Colors.white24,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w200)),
-                        Text("high",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600)),
-                        Text("low",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600))
-                      ],
-                    ),
-                  )),
-              Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 100, 78, 159),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Thursday",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w200),
-                        ),
-                        Icon(
-                          Icons.ac_unit,
-                        ),
-                        Text("windy",
-                            style: TextStyle(
-                                color: Colors.white24,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w200)),
-                        Text("high",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600)),
-                        Text("low",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600))
-                      ],
-                    ),
-                  )),
-              Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 100, 78, 159),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Friday",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w200),
-                        ),
-                        Icon(
-                          Icons.ac_unit,
-                        ),
-                        Text("windy",
-                            style: TextStyle(
-                                color: Colors.white24,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w200)),
-                        Text("high",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600)),
-                        Text("low",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600))
-                      ],
-                    ),
-                  )),
-              Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 100, 78, 159),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Saturday",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w200),
-                        ),
-                        Icon(
-                          Icons.ac_unit,
-                        ),
-                        Text("windy",
-                            style: TextStyle(
-                                color: Colors.white24,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w200)),
-                        Text("high",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600)),
-                        Text("low",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600))
-                      ],
-                    ),
-                  )),
-              Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 100, 78, 159),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Sunday",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w200),
-                        ),
-                        Icon(
-                          Icons.ac_unit,
-                        ),
-                        Text("windy",
-                            style: TextStyle(
-                                color: Colors.white24,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w200)),
-                        Text("high",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600)),
-                        Text("low",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600))
-                      ],
-                    ),
-                  )),
-            ],
-          ),
+          SizedBox(
+              height: 300,
+              child: forecastinfo.forecastdata == null
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Consumer<ForecastDetails>(builder: (context, data, child) {
+                      DateTime currentDate = DateTime.now();
+
+                      List<ListElement> forecastData = data.forecastdata!.list;
+
+                      List<ListElement> currentDayForecast = forecastData
+                          .where((forecast) =>
+                              forecast.dtTxt.year == currentDate.year &&
+                              forecast.dtTxt.month == currentDate.month &&
+                              forecast.dtTxt.day == currentDate.day)
+                          .toList();
+                      Map<String, List<ListElement>> groupForecastByDay(
+                          List<ListElement> forecastData) {
+                        Map<String, List<ListElement>> groupedData = {};
+
+                        for (var element in forecastData) {
+                          String date =
+                              "${element.dtTxt.year}-${element.dtTxt.month}-${element.dtTxt.day}";
+
+                          if (!groupedData.containsKey(date)) {
+                            groupedData[date] = [];
+                          }
+
+                          groupedData[date]!.add(element);
+                        }
+
+                        return groupedData;
+                      }
+
+                      Map<String, List<ListElement>> groupedData =
+                          groupForecastByDay(forecastData);
+
+                      return ListView.builder(
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            String date = groupedData.keys.elementAt(index);
+                            List<ListElement> dailyData = groupedData[date]!;
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                height: 40,
+                                // width: 80,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      formatDate(unpackDate(dailyData[index].dt)
+                                          as DateTime)
+                                      // daynames[index],
+                                      ,
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    Image.network(
+                                      "https://openweathermap.org/img/wn/${dailyData[index].weather[0].icon}@2x.png",
+                                      height: 80,
+                                      // width: 100,
+                                    ),
+                                    Text(dailyData[index].weather[0].main,
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w200)),
+                                    Text(
+                                        "+${dailyData[index].main.tempMin.toString()}",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600)),
+                                    Text(
+                                        "+${dailyData[index].main.tempMax.toString()}",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600)),
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    }))
         ]));
   }
 }

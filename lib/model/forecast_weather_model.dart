@@ -23,6 +23,8 @@ class ForecastWeatherModel {
 
   get timezone => null;
 
+  get weather => null;
+
   Map<String, dynamic> toJson() => _$ForecastWeatherModelToJson(this);
 }
 
@@ -95,6 +97,8 @@ class ListElement {
 
   factory ListElement.fromJson(Map<String, dynamic> json) =>
       _$ListElementFromJson(json);
+
+  get daynames => null;
   Map<String, dynamic> toJson() => _$ListElementToJson(this);
 }
 
