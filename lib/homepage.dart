@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:qweather_icons/qweather_icons.dart';
-import 'package:weather_app/7days.dart';
+import 'package:weather_app/5days.dart';
 import 'package:weather_app/forecastapi.dart';
 import 'package:weather_app/model/forecast_weather_model.dart';
 import 'package:weather_app/weatherapi.dart';
